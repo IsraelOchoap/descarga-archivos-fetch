@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descarga archivo con fetch</title>
+    <style>
+        *{
+            
+            box-sizing: border-box;;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            min-width: 300px;
+            max-width: 950px;
+            margin: 0  auto;
+            padding: 1rem;
+        }
+        .download {
+            padding: 1rem 0;
+        }
+        .download-hidden {
+            display: none;
+        }
+        a{
+            text-decoration: none;
+            color:rgb(68, 139, 68)
+        }
+        select{
+            padding: .3rem 1rem .3rem .3rem;
+            outline: none;
+        }
+        input[type=button]{
+            padding: 0.4rem 1rem;
+            color: #fff;
+            background: rgb(19, 72, 172);
+            border: 0px solid;
+            border-radius: 0 2rem 2rem 0;
+            outline: none;
+            cursor: pointer;
+        }
+        .actions{
+            display: flex;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Descarga de documento mediante fetch</h1>
+            <h3>Este ejemplo sirve para los caso donde un vista MVC nos regresa un archivo PDF,Excel, Word, etc.</h3>
+        </header>
+        <main>
+            <div class="actions">
+                <select id="selectFile" name="">
+                    <option value="calendario_academico.xlsx">Archivo Excel</option>
+                    <option value="ejemplo_word_fetch.docx">Archivo Word</option>
+                    <option value="ejemplo_pdf_fetch.pdf">Archivo PDF</option>
+                </select>
+                <input type="button" value=" Generar resultados " onclick="getFile()">
+            </div>
+            <div id="optionalLink" class="download download-hidden">
+                <a href="#" id="lnkDescarga" download="">Si no pudiste decargar el achivo haz click aquí</a>
+            </div>     
+            <h4>HTML</h4>
+            <pre> 
+&lt;div class="actions">
+    &lt;select id="selectFile" name="">
+        &lt;option value="calendario_academico.xlsx">Archivo Excel</option>
+        &lt;option value="ejemplo_word_fetch.docx">Archivo Word</option>
+        &lt;option value="ejemplo_pdf_fetch.pdf">Archivo PDF</option>
+    &lt;/select>
+    &lt;input type="button" value=" Generar resultados " onclick="getFile()">
+&lt;/div>
+&lt;div id="optionalLink" class="download download-hidden">
+&lt;a href="#" id="lnkDescarga" download="">Si no pudiste decargar el achivo haz click aquí</a>
+    &lt;/div>               
+
+            </pre>
+            <h4>JS</h4>
+            <pre>
+
+const getFile = async () => {
+    try {
+        
+        optionalLink.classList.add("download-hidden") //Oculta el link de descarga                        
+        let EndPoint = selectFile.value               //Llamada a la web-api para este ejemplo es un archivo específico
+        let request = await fetch(EndPoint) 
+        let resp = await request.blob() 
+        let file = URL.createObjectURL(resp)               
+        lnkDescarga.href = file
+        lnkDescarga.download = EndPoint              //"como quieres que se llame el archivo"
+        lnkDescarga.click();                         //ejecuta la descarga en el cliente
+        //URL.revokeObjectURL(file)                   //Libera recursos
+        //Hace visible el link por en caso de que el navegador no inicie la descarga
+        optionalLink.classList.remove("download-hidden") 
+    }
+    catch (ex) {
+        console.log(ex)
+    }
+}
+            </pre>
+            <script>
+                const getFile = async () => {
+                    try {
+                        
+                        optionalLink.classList.add("download-hidden") //Oculta el link de descarga                        
+                        let EndPoint = selectFile.value               //Llamada a la web-api para este ejemplo es un archivo específico
+                        let request = await fetch(EndPoint) 
+                        let resp = await request.blob() 
+                        let file = URL.createObjectURL(resp)               
+                        lnkDescarga.href = file
+                        lnkDescarga.download = EndPoint              //"como quieres que se llame el archivo"
+                        lnkDescarga.click();                         //ejecuta la descarga en el cliente
+                        //URL.revokeObjectURL(file)                   //Libera recursos
+                        //Hace visible el link por en caso de que el navegador no inicie la descarga
+                        optionalLink.classList.remove("download-hidden") 
+                    }
+                    catch (ex) {
+                        console.log(ex)
+                    }
+                }
+            </script>
+        </main>
+    </div>
+</body>
+
+</html>
